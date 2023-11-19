@@ -8,6 +8,7 @@ public class FollowWP : MonoBehaviour
     int currentWP = 0;
 
     public float speed = 10.0f;
+    public float rotSpeed = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,7 @@ public class FollowWP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(this.transform.position, waypoints[currentWP].transform.position) < 3)
+        if (Vector3.Distance(this.transform.position, waypoints[currentWP].transform.position) < 10)
         {
             currentWP++;
         }
@@ -26,7 +27,13 @@ public class FollowWP : MonoBehaviour
         {
             currentWP = 0;
         }
-        this.transform.LookAt(waypoints[currentWP].transform);
+
+        //this.transform.LookAt(waypoints[currentWP].transform);
+
+        Quaternion lookWP = Quaternion.LookRotation(waypoints[currentWP].transform.position - this.transform.position);
+
+        this.transform.rotation = Quaternion.Slerp(transform.rotation, lookWP, rotSpeed * Time.deltaTime);
+
         this.transform.Translate(0,0, speed * Time.deltaTime);
 
     }
